@@ -1,160 +1,225 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>fx mothol 5.v5.0.1</title>
+
 <style>
-*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto}
+*{box-sizing:border-box;font-family:system-ui}
 body{margin:0;background:#020617;color:#e5e7eb}
-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #111827}
-header h1{font-size:16px;margin:0}
-nav{display:flex;gap:8px;flex-wrap:wrap}
-nav button{background:#111827;color:#e5e7eb;border:1px solid #1f2933;border-radius:8px;padding:8px 10px;cursor:pointer}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #111827}
+nav button{margin-right:6px;padding:8px;border-radius:8px;border:1px solid #1f2933;background:#111827;color:#e5e7eb;cursor:pointer}
 nav button.active{background:#2563eb}
 main{padding:12px}
 .page{display:none}
 .page.active{display:block}
-.card{background:#020617;border:1px solid #1f2933;border-radius:12px;padding:12px;margin-bottom:12px}
-.row{display:flex;gap:8px;flex-wrap:wrap}
+.card{border:1px solid #1f2933;border-radius:12px;padding:12px;margin-bottom:12px}
 .center{text-align:center}
-.btn{background:#2563eb;color:#fff;border:none;border-radius:8px;padding:10px 12px;cursor:pointer}
+.btn{padding:10px 12px;border-radius:8px;border:none;background:#2563eb;color:#fff;cursor:pointer}
 .btn.gray{background:#374151}
 .btn.red{background:#dc2626}
-input,select{background:#020617;color:#e5e7eb;border:1px solid #1f2933;border-radius:8px;padding:8px}
-.chat{max-height:180px;overflow:auto;border:1px solid #1f2933;border-radius:8px;padding:8px}
-.admin{position:fixed;left:10px;top:60px;width:300px;z-index:50}
+input,select{width:100%;margin-bottom:6px;padding:8px;border-radius:8px;background:#020617;color:#e5e7eb;border:1px solid #1f2933}
+.chat{height:160px;overflow:auto;border:1px solid #1f2933;border-radius:8px;padding:6px}
+.admin{position:fixed;left:10px;top:60px;width:300px;z-index:99}
 .hidden{display:none}
-footer{position:fixed;bottom:0;left:0;right:0;padding:8px 12px;border-top:1px solid #111827;background:#020617}
-@media (max-width:480px){nav button{flex:1}}
+footer{padding:8px;text-align:center;border-top:1px solid #111827}
 </style>
 </head>
+
 <body>
 
-<audio id="sndWin" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
-<audio id="sndLose" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
-<audio id="sndDice" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg"></audio>
-
 <header>
-  <h1>🎮 fx mothol 5.v5.0.1</h1>
-  <nav>
-    <button id="tab-taixiu" class="active" onclick="go('taixiu')">Tài Xỉu</button>
-    <button id="tab-stock" onclick="go('stock')">Cổ Phiếu</button>
-    <button id="tab-wheel" onclick="go('wheel')">Vòng Quay</button>
-    <button id="tab-profile" onclick="go('profile')">Tài Khoản</button>
-    <button onclick="openAdmin()">Admin</button>
-  </nav>
+<h3>🎮 fx mothol 5.v5.0.1</h3>
+<nav>
+<button id="tab-taixiu" class="active" onclick="go('taixiu')">Tài Xỉu</button>
+<button id="tab-stock" onclick="go('stock')">Cổ Phiếu</button>
+<button id="tab-wheel" onclick="go('wheel')">Vòng Quay</button>
+<button id="tab-profile" onclick="go('profile')">Tài Khoản</button>
+<button onclick="openAdmin()">Admin</button>
+</nav>
 </header>
 
 <main>
+
 <section id="taixiu" class="page active">
-  <div class="card center">
-    <h3>⏱ Phiên: <span id="timer">60</span>s</h3>
-    <div id="dice" style="font-size:30px">🎲 🎲 🎲</div>
-    <p>Kết quả: <b id="result">---</b></p>
-    <div class="row center">
-      <button class="btn" onclick="bet('TAI')">TÀI</button>
-      <button class="btn gray" onclick="bet('XIU')">XỈU</button>
-    </div>
-    <div class="row center" style="margin-top:8px">
-      <select id="amount">
-        <option value="10000">10.000</option>
-        <option value="50000">50.000</option>
-        <option value="100000">100.000</option>
-        <option value="500000">500.000</option>
-      </select>
-    </div>
-  </div>
-  <div class="card"><h4>🤖 BOT</h4><div id="botTable"></div></div>
+<div class="card center">
+<h3>⏱ <span id="timer">60</span>s</h3>
+<div id="dice" style="font-size:32px">🎲 🎲 🎲</div>
+<p>KQ: <b id="result">---</b></p>
+<select id="amount">
+<option value="10000">10.000</option>
+<option value="50000">50.000</option>
+<option value="100000">100.000</option>
+</select>
+<button class="btn" onclick="bet('TAI')">TÀI</button>
+<button class="btn gray" onclick="bet('XIU')">XỈU</button>
+</div>
+<div class="card"><h4>🤖 BOT</h4><div id="botTable"></div></div>
 </section>
 
 <section id="stock" class="page">
-  <div class="card center">
-    <h3>📊 Cổ Phiếu</h3>
-    <p>Giá hiện tại: <b id="stockPrice">60.000.000</b> VND</p>
-    <div class="row center">
-      <button class="btn" onclick="trade('buy')">Mua</button>
-      <button class="btn gray" onclick="trade('sell')">Bán</button>
-    </div>
-  </div>
+<div class="card center">
+<p>Giá CP: <b id="stockPrice">60.000.000</b></p>
+<button class="btn" onclick="trade()">Mua / Bán</button>
+</div>
 </section>
 
 <section id="wheel" class="page">
-  <div class="card center">
-    <h3>🎁 Vòng Quay</h3>
-    <button class="btn" onclick="spin()">Quay</button>
-    <p id="wheelRes"></p>
-  </div>
+<div class="card center">
+<button class="btn" onclick="spin()">🎁 Quay</button>
+<p id="wheelRes"></p>
+</div>
 </section>
 
 <section id="profile" class="page">
-  <div class="card">
-    <p>Số dư: <b id="balance">0</b> VND</p>
-    <input id="gift" placeholder="Nhập gift code" />
-    <button class="btn" onclick="useGift()">Nhận quà</button>
-  </div>
-  <div class="card">
-    <h4>💬 AI Trợ Lý</h4>
-    <div class="chat" id="chat"></div>
-    <input id="chatIn" placeholder="Gõ lệnh..." />
-    <button class="btn" onclick="sendChat()">Gửi</button>
-  </div>
+<div class="card">
+<p>Số dư: <b id="balance"></b> VND</p>
+<input id="gift" placeholder="Gift code">
+<button class="btn" onclick="useGift()">Nhận</button>
+</div>
+<div class="card">
+<h4>🤖 AI Trợ lý</h4>
+<div class="chat" id="chat"></div>
+<input id="chatIn">
+<button class="btn gray" onclick="sendChat()">Gửi</button>
+</div>
 </section>
+
 </main>
 
 <div id="admin" class="admin hidden">
-  <div class="card">
-    <h3>🔐 Admin</h3>
-    <input id="a1" placeholder="admindz" />
-    <input id="a2" placeholder="money ve" />
-    <button class="btn" onclick="loginAdmin()">Đăng nhập</button>
-  </div>
-  <div id="adminDash" class="card hidden">
-    <p>Lãi nhà cái: <b id="house">0</b></p>
-    <div class="row">
-      <button class="btn red" onclick="forceWin()">Ép thắng</button>
-      <button class="btn gray" onclick="adminUnban()">Gỡ khóa</button>
-    </div>
-  </div>
+<div class="card">
+<input id="a1" placeholder="admindz">
+<input id="a2" placeholder="money ve">
+<button class="btn" onclick="loginAdmin()">Đăng nhập</button>
+</div>
+<div id="adminDash" class="card hidden">
+<p>Lãi nhà cái: <b id="house"></b></p>
+<button class="btn red" onclick="forceWin()">Ép thắng</button>
+<button class="btn gray" onclick="adminUnban()">Gỡ khóa</button>
+</div>
 </div>
 
-<footer>fx mothol 5.v5.0.1 • demo học tập • tiền ảo</footer>
+<footer>Demo học tập – tiền ảo</footer>
 
 <script>
-/**************** NAV ****************/nfunction go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));document.getElementById('tab-'+p)?.classList.add('active')}
+/* ===== NAV ===== */
+function go(p){
+document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+document.getElementById(p).classList.add('active');
+document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+document.getElementById('tab-'+p)?.classList.add('active');
+}
 
-/**************** STATE + STORAGE ****************/nconst LS=window.localStorage;let user=JSON.parse(LS.getItem('user_fx'))||{bal:1000000,fp:null,stats:{w:0,l:0,bet:0}};let bal=user.bal,house=0,betSide=null,betAmt=0,t=60,forced=false;
-function save(){user.bal=bal;LS.setItem('user_fx',JSON.stringify(user))}
+/* ===== STATE ===== */
+const LS=localStorage;
+let user=JSON.parse(LS.getItem('fx_user'))||{bal:1000000,fp:null};
+let bal=user.bal,house=0,betSide=null,betAmt=0,forced=false,t=60;
 
-/**************** FINGERPRINT (IP/DEVICE HEURISTIC) ****************/nfunction fingerprint(){const s=[navigator.userAgent,screen.width,screen.height,screen.colorDepth,navigator.language].join('|');let h=0;for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i);h|=0;}return 'fp_'+Math.abs(h)};if(!user.fp){user.fp=fingerprint();save()}
+/* ===== FINGERPRINT ===== */
+function fingerprint(){
+return btoa(navigator.userAgent+screen.width+screen.height).slice(0,16);
+}
+if(!user.fp){user.fp=fingerprint();LS.setItem('fx_user',JSON.stringify(user));}
 
-/**************** BOT ****************/nfunction spawnBots(){const el=document.getElementById('botTable');el.innerHTML='';const n=Math.floor(Math.random()*15)+10;for(let i=0;i<n;i++){const s=Math.random()>.5?'TÀI':'XỈU';const a=(Math.floor(Math.random()*5)+1)*10000;el.innerHTML+=`BOT${i}: ${s} ${a.toLocaleString('vi-VN')}<br>`}}spawnBots();
+/* ===== BOT ===== */
+function spawnBots(){
+botTable.innerHTML='';
+for(let i=0;i<15;i++){
+botTable.innerHTML+=`BOT${i} cược ${(Math.random()>.5?'TÀI':'XỈU')}<br>`;
+}
+}
+spawnBots();
 
-/**************** AI HOUSE (DYNAMIC ODDS) ****************/nconst AIHouse={targetEdge:0.08,adjust(){const profit=Math.max(house,0);this.edge=Math.min(0.25, this.targetEdge + profit/1e7)} };
+/* ===== AI HOUSE ===== */
+const AIHouse={edge:0.1,adjust(){this.edge=Math.min(.3,.1+house/1e7)}};
 
-/**************** TAI XIU ****************/nsetInterval(()=>{t--;timer.textContent=t;if(t<=0){openDice();t=60}},1000)
-function bet(s){if(AntiHack.banned) return log('🚫 Bị khóa');betSide=s;betAmt=+amount.value;user.stats.bet++;log('Bạn cược '+s)}
-function openDice(){sndDice.play();AIHouse.adjust();const a=1+Math.floor(Math.random()*6),b=1+Math.floor(Math.random()*6),c=1+Math.floor(Math.random()*6);const sum=a+b+c;let res;if(forced){res=betSide||'TAI'}else{const bias=Math.random()<AIHouse.edge;res=(sum>=11)^(bias)?'TAI':'XIU'}forced=false;dice.textContent=`🎲${a} 🎲${b} 🎲${c}`;result.textContent=res;if(betSide){if(betSide===res){bal+=betAmt;house-=betAmt;user.stats.w++;sndWin.play();if(navigator.vibrate) navigator.vibrate(80);log('Thắng +'+betAmt.toLocaleString())}else{bal-=betAmt;house+=betAmt;user.stats.l++;sndLose.play();if(navigator.vibrate) navigator.vibrate([40,40]);log('Thua -'+betAmt.toLocaleString())}}update()}
+/* ===== ANTI HACK ===== */
+const AntiHack={banned:false,last:0,spam:0,onBet(){
+const n=Date.now();
+if(n-this.last<400)this.spam++;
+this.last=n;
+if(this.spam>=4){this.banned=true;log('⛔ Hack spam cược');}
+}};
 
-/**************** STOCK ****************/nlet price=60000000;function trade(){price+= (Math.random()>.5?1:-1)*1000000;stockPrice.textContent=price.toLocaleString('vi-VN');log('Giao dịch cổ phiếu')}
+/* ===== GAME LOOP ===== */
+setInterval(()=>{
+t--;timer.textContent=t;
+if(t<=0){openDice();t=60;}
+},1000);
 
-/**************** WHEEL ****************/nfunction spin(){const p=[0,10000,50000,100000];const r=p[Math.floor(Math.random()*p.length)];bal+=r;wheelRes.textContent='+'+r.toLocaleString('vi-VN');update()}
+function bet(s){
+if(AntiHack.banned)return log('🚫 Bị khóa');
+AntiHack.onBet();
+betSide=s;betAmt=+amount.value;
+log('Cược '+s);
+}
 
-/**************** GIFT ****************/nlet gifts=JSON.parse(LS.getItem('gifts_fx')||'{"FX501":5000000}');function useGift(){const c=gift.value;if(gifts[c]){bal+=gifts[c];delete gifts[c];LS.setItem('gifts_fx',JSON.stringify(gifts));log('Nhận gift');update()}else log('Code không hợp lệ')}
+function openDice(){
+AIHouse.adjust();
+const a=1+Math.floor(Math.random()*6);
+const b=1+Math.floor(Math.random()*6);
+const c=1+Math.floor(Math.random()*6);
+const sum=a+b+c;
+let res=forced?betSide:(Math.random()<AIHouse.edge?'XIU':'TAI');
+forced=false;
+dice.textContent=`🎲${a} 🎲${b} 🎲${c}`;
+result.textContent=res;
+if(betSide){
+if(res===betSide){bal+=betAmt;house-=betAmt;log('Thắng');}
+else{bal-=betAmt;house+=betAmt;log('Thua');}
+}
+update();
+}
 
-/**************** AI ANTI-HACK NÂNG CAO ****************/nconst AntiHack={flags:{spam:0,tamper:0,devtools:0,pattern:0},last:{bet:0,bal:bal},same:0,lastSide:null,banned:false,score(){return this.flags.spam+this.flags.tamper*2+this.flags.devtools*2+this.flags.pattern},tick(){if(Math.abs(bal-this.last.bal)>5e6){this.flags.tamper++;log('⚠️ Can thiệp số dư')}this.last.bal=bal;const w=Math.abs(window.outerWidth-window.innerWidth),h=Math.abs(window.outerHeight-window.innerHeight);if(w>160||h>160)this.flags.devtools++;if(this.same>=5){this.flags.pattern++;this.same=0}if(this.score()>=4&&!this.banned){this.banned=true;log('⛔ Tạm khóa nghi hack');}},onBet(s){const n=Date.now();if(n-this.last.bet<350)this.flags.spam++;this.last.bet=n;if(s===this.lastSide)this.same++;else this.same=1;this.lastSide=s}};setInterval(()=>AntiHack.tick(),1000);
+/* ===== STOCK ===== */
+let price=60000000;
+function trade(){
+price+= (Math.random()>.5?1:-1)*1000000;
+stockPrice.textContent=price.toLocaleString('vi-VN');
+}
 
-/**************** FIREBASE LOG (PLACEHOLDER) ****************/nconst Firebase={enabled:false,log(e){if(this.enabled){console.log('[FB]',e)} }};
+/* ===== WHEEL ===== */
+function spin(){
+const r=[0,1e4,5e4,1e5][Math.floor(Math.random()*4)];
+bal+=r;wheelRes.textContent='+'+r.toLocaleString();
+update();
+}
 
-/**************** ADMIN ****************/nfunction openAdmin(){admin.classList.toggle('hidden')}
-function loginAdmin(){if(a1.value==='admindz'&&a2.value==='money ve'){adminDash.classList.remove('hidden');log('Admin đăng nhập')}}
-function forceWin(){forced=true;log('Ép thắng ván sau')}
-function adminUnban(){AntiHack.banned=false;AntiHack.flags={spam:0,tamper:0,devtools:0,pattern:0};log('Gỡ khóa')}
+/* ===== GIFT ===== */
+const gifts={FX501:5000000};
+function useGift(){
+if(gifts[gift.value]){bal+=gifts[gift.value];delete gifts[gift.value];log('Nhận gift');update();}
+else log('Sai code');
+}
 
-/**************** CHAT ****************/nfunction log(m){const c=document.getElementById('chat');const p=document.createElement('p');p.textContent='AI: '+m;c.appendChild(p);c.scrollTop=c.scrollHeight;Firebase.log({fp:user.fp,msg:m})}
-function sendChat(){log(chatIn.value);chatIn.value=''}
+/* ===== ADMIN ===== */
+function openAdmin(){admin.classList.toggle('hidden')}
+function loginAdmin(){
+if(a1.value==='admindz'&&a2.value==='money ve'){adminDash.classList.remove('hidden');log('Admin OK')}
+}
+function forceWin(){forced=true}
+function adminUnban(){AntiHack.banned=false;AntiHack.spam=0;log('Đã gỡ khóa')}
 
-/**************** UPDATE ****************/nfunction update(){balance.textContent=bal.toLocaleString('vi-VN');houseEl=house;save()}update();
+/* ===== CHAT ===== */
+function log(m){
+const p=document.createElement('p');
+p.textContent='AI: '+m;
+chat.appendChild(p);
+chat.scrollTop=chat.scrollHeight;
+}
+
+/* ===== UPDATE ===== */
+function update(){
+balance.textContent=bal.toLocaleString('vi-VN');
+houseEl=document.getElementById('house');
+houseEl.textContent=house.toLocaleString('vi-VN');
+user.bal=bal;
+LS.setItem('fx_user',JSON.stringify(user));
+}
+update();
 </script>
+
 </body>
 </html>
