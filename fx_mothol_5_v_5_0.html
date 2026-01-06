@@ -47,15 +47,21 @@ footer{padding:8px;text-align:center;border-top:1px solid #111827}
 <h3>⏱ <span id="timer">60</span>s</h3>
 <div id="dice" style="font-size:32px">🎲 🎲 🎲</div>
 <p>KQ: <b id="result">---</b></p>
+
 <select id="amount">
 <option value="10000">10.000</option>
 <option value="50000">50.000</option>
 <option value="100000">100.000</option>
 </select>
+
 <button class="btn" onclick="bet('TAI')">TÀI</button>
 <button class="btn gray" onclick="bet('XIU')">XỈU</button>
 </div>
-<div class="card"><h4>🤖 BOT</h4><div id="botTable"></div></div>
+
+<div class="card">
+<h4>🤖 BOT cược</h4>
+<div id="botTable"></div>
+</div>
 </section>
 
 <section id="stock" class="page">
@@ -78,26 +84,37 @@ footer{padding:8px;text-align:center;border-top:1px solid #111827}
 <input id="gift" placeholder="Gift code">
 <button class="btn" onclick="useGift()">Nhận</button>
 </div>
+
 <div class="card">
 <h4>🤖 AI Trợ lý</h4>
 <div class="chat" id="chat"></div>
-<input id="chatIn">
+<input id="chatIn" placeholder="Nhập lệnh admin / chat">
 <button class="btn gray" onclick="sendChat()">Gửi</button>
 </div>
 </section>
 
 </main>
 
+<!-- ADMIN -->
 <div id="admin" class="admin hidden">
 <div class="card">
 <input id="a1" placeholder="admindz">
 <input id="a2" placeholder="money ve">
 <button class="btn" onclick="loginAdmin()">Đăng nhập</button>
 </div>
+
 <div id="adminDash" class="card hidden">
 <p>Lãi nhà cái: <b id="house"></b></p>
+
 <button class="btn red" onclick="forceWin()">Ép thắng</button>
 <button class="btn gray" onclick="adminUnban()">Gỡ khóa</button>
+
+<hr>
+<h4>🎁 Tạo Gift Code</h4>
+<input id="newCode" placeholder="Mã code">
+<input id="newMoney" type="number" placeholder="Số tiền">
+<button class="btn" onclick="adminCreateGift()">Tạo code</button>
+<p id="giftStatus"></p>
 </div>
 </div>
 
@@ -117,31 +134,14 @@ const LS=localStorage;
 let user=JSON.parse(LS.getItem('fx_user'))||{bal:1000000,fp:null};
 let bal=user.bal,house=0,betSide=null,betAmt=0,forced=false,t=60;
 
-/* ===== FINGERPRINT ===== */
-function fingerprint(){
-return btoa(navigator.userAgent+screen.width+screen.height).slice(0,16);
-}
-if(!user.fp){user.fp=fingerprint();LS.setItem('fx_user',JSON.stringify(user));}
-
 /* ===== BOT ===== */
 function spawnBots(){
 botTable.innerHTML='';
-for(let i=0;i<15;i++){
+for(let i=0;i<12;i++){
 botTable.innerHTML+=`BOT${i} cược ${(Math.random()>.5?'TÀI':'XỈU')}<br>`;
 }
 }
 spawnBots();
-
-/* ===== AI HOUSE ===== */
-const AIHouse={edge:0.1,adjust(){this.edge=Math.min(.3,.1+house/1e7)}};
-
-/* ===== ANTI HACK ===== */
-const AntiHack={banned:false,last:0,spam:0,onBet(){
-const n=Date.now();
-if(n-this.last<400)this.spam++;
-this.last=n;
-if(this.spam>=4){this.banned=true;log('⛔ Hack spam cược');}
-}};
 
 /* ===== GAME LOOP ===== */
 setInterval(()=>{
@@ -150,25 +150,24 @@ if(t<=0){openDice();t=60;}
 },1000);
 
 function bet(s){
-if(AntiHack.banned)return log('🚫 Bị khóa');
-AntiHack.onBet();
-betSide=s;betAmt=+amount.value;
-log('Cược '+s);
+betSide=s;
+betAmt=+amount.value;
+log('Cược '+s+' '+betAmt.toLocaleString());
 }
 
 function openDice(){
-AIHouse.adjust();
 const a=1+Math.floor(Math.random()*6);
 const b=1+Math.floor(Math.random()*6);
 const c=1+Math.floor(Math.random()*6);
 const sum=a+b+c;
-let res=forced?betSide:(Math.random()<AIHouse.edge?'XIU':'TAI');
-forced=false;
+const res=sum>=11?'TAI':'XIU';
+
 dice.textContent=`🎲${a} 🎲${b} 🎲${c}`;
 result.textContent=res;
+
 if(betSide){
-if(res===betSide){bal+=betAmt;house-=betAmt;log('Thắng');}
-else{bal-=betAmt;house+=betAmt;log('Thua');}
+if(res===betSide){bal+=betAmt;house-=betAmt;log('🎉 Thắng');}
+else{bal-=betAmt;house+=betAmt;log('❌ Thua');}
 }
 update();
 }
@@ -182,25 +181,50 @@ stockPrice.textContent=price.toLocaleString('vi-VN');
 
 /* ===== WHEEL ===== */
 function spin(){
-const r=[0,1e4,5e4,1e5][Math.floor(Math.random()*4)];
-bal+=r;wheelRes.textContent='+'+r.toLocaleString();
+const r=[0,10000,50000,100000][Math.floor(Math.random()*4)];
+bal+=r;
+wheelRes.textContent='+'+r.toLocaleString();
 update();
 }
 
-/* ===== GIFT ===== */
-const gifts={FX501:5000000};
+/* ===== GIFT SYSTEM ===== */
+function adminCreateGift(){
+const code=newCode.value.trim();
+const money=parseInt(newMoney.value);
+if(!code||!money)return giftStatus.textContent='❌ Thiếu dữ liệu';
+
+let gifts=JSON.parse(LS.getItem('fx_gifts')||'{}');
+gifts[code]=money;
+LS.setItem('fx_gifts',JSON.stringify(gifts));
+
+giftStatus.textContent='✅ Đã tạo code '+code;
+newCode.value='';newMoney.value='';
+}
+
 function useGift(){
-if(gifts[gift.value]){bal+=gifts[gift.value];delete gifts[gift.value];log('Nhận gift');update();}
-else log('Sai code');
+const code=gift.value.trim();
+let gifts=JSON.parse(LS.getItem('fx_gifts')||'{}');
+
+if(!gifts[code])return log('❌ Code không tồn tại');
+
+bal+=gifts[code];
+delete gifts[code];
+LS.setItem('fx_gifts',JSON.stringify(gifts));
+
+log('🎁 Nhận '+gifts[code]?.toLocaleString());
+update();
 }
 
 /* ===== ADMIN ===== */
 function openAdmin(){admin.classList.toggle('hidden')}
 function loginAdmin(){
-if(a1.value==='admindz'&&a2.value==='money ve'){adminDash.classList.remove('hidden');log('Admin OK')}
+if(a1.value==='admindz'&&a2.value==='money ve'){
+adminDash.classList.remove('hidden');
+log('✅ Admin đăng nhập');
+}
 }
 function forceWin(){forced=true}
-function adminUnban(){AntiHack.banned=false;AntiHack.spam=0;log('Đã gỡ khóa')}
+function adminUnban(){log('Đã gỡ khóa')}
 
 /* ===== CHAT ===== */
 function log(m){
@@ -210,11 +234,16 @@ chat.appendChild(p);
 chat.scrollTop=chat.scrollHeight;
 }
 
+function sendChat(){
+if(!chatIn.value)return;
+log(chatIn.value);
+chatIn.value='';
+}
+
 /* ===== UPDATE ===== */
 function update(){
 balance.textContent=bal.toLocaleString('vi-VN');
-houseEl=document.getElementById('house');
-houseEl.textContent=house.toLocaleString('vi-VN');
+house.textContent=house.toLocaleString('vi-VN');
 user.bal=bal;
 LS.setItem('fx_user',JSON.stringify(user));
 }
